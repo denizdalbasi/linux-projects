@@ -55,3 +55,62 @@ if [ -z "$USER_NAME" ]; then
 fi
 
 echo -e "Nice to meet you, ${GREEN}${USER_NAME}${RESET}. Type ${YELLOW}'help'${RESET} to see what I can do, or ${YELLOW}'exit'${RESET} to quit.\n"
+while true; do
+    echo -ne "${CYAN}${USER_NAME}> ${RESET}"
+    read -r input
+
+    input_lower="${input,,}"
+    ((MESSAGE_COUNT++))
+
+    if [[ "$input_lower" == "exit" || "$input_lower" == "quit" ]]; then
+        print_robot_art
+        echo -e "${YELLOW}${BOT_NAME}: Disconnecting from the grid. Goodbye, ${USER_NAME}!${RESET}"
+        break
+    fi
+
+    case "$input_lower" in
+        "help"|"?")
+            echo -e "${YELLOW}${BOT_NAME}: Here are commands you can try:"
+            echo -e "  - ${GREEN}hello / hi${RESET} : Greet the bot"
+            echo -e "  - ${GREEN}status${RESET}     : Check system and session stats"
+            echo -e "  - ${GREEN}joke${RESET}       : Hear a programming joke"
+            echo -e "  - ${GREEN}matrix${RESET}     : See the Matrix art"
+            echo -e "  - ${GREEN}mood${RESET}       : Check how the bot is feeling"
+            echo -e "  - ${GREEN}exit / quit${RESET}: Leave the chat${RESET}"
+            ;;
+        
+        "hello"|"hi"|"hey")
+            echo -e "${GREEN}${BOT_NAME}: Greetings, ${USER_NAME}! How is your shell session going today?${RESET}"
+            ;;
+
+        "status"|"stats")
+            echo -e "${GREEN}${BOT_NAME}:"
+            echo -e "  - User: ${USER_NAME}"
+            echo -e "  - Bot Name: ${BOT_NAME}"
+            echo -e "  - Current Mood: ${MOOD}"
+            echo -e "  - Messages Exchanged: ${MESSAGE_COUNT}"
+            echo -e "  - Uptime/OS: $(uname -sr) ${RESET}"
+            ;;
+
+        "joke")
+            rand_index=$(( RANDOM % ${#JOKES[@]} ))
+            echo -e "${YELLOW}${BOT_NAME}: ${JOKES[$rand_index]}${RESET}"
+            ;;
+
+        "matrix")
+            print_matrix_art
+            echo -e "${GREEN}${BOT_NAME}: Follow the white rabbit, ${USER_NAME}.${RESET}"
+            ;;
+
+        "mood")
+            echo -e "${CYAN}${BOT_NAME}: My current mood is ${MOOD}. Everything is compiling smoothly.${RESET}"
+            ;;
+
+        * )
+            rand_index=$(( RANDOM % ${#CHITCHAT[@]} ))
+            echo -e "${GREEN}${BOT_NAME}: ${CHITCHAT[$rand_index]}${RESET}"
+            ;;
+    esac
+    
+    echo ""
+done
