@@ -24,7 +24,8 @@ def init_db():
     conn.commit()
     conn.close()
 
-def get_or_create_salt(cursor) -> bytes:
+def get_or_create_salt(conn) -> bytes:
+    cursor = conn.cursor()
     cursor.execute("SELECT salt FROM metadata WHERE id = 1")
     row = cursor.fetchone()
     if row:
@@ -32,6 +33,7 @@ def get_or_create_salt(cursor) -> bytes:
     else:
         salt = os.urandom(16)
         cursor.execute("INSERT INTO metadata (id, salt) VALUES (1, ?)", (salt,))
+        conn.commit()
         return salt
 
 def get_db_connection():
